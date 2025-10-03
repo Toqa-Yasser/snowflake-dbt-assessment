@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: "Silver layer: orders joined to customer with derived order_year."
+    columns:
+      - name: o_orderkey
+        tests: [not_null, unique]
+      - name: o_custkey
+        tests:
+          - relationships:
+              to: source('tpch','customer')
+              field: c_custkey

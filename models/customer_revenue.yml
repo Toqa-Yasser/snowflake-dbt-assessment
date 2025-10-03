@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: customer_revenue
+    description: "Gold layer: total revenue per customer from orders + lineitem."
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: total_revenue
+        description: "Sum(l_extendedprice*(1-l_discount)) over all orders per customer"
