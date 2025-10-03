@@ -2,9 +2,24 @@ version: 2
 
 models:
   - name: customer_revenue
-    description: "Gold layer: total revenue per customer from orders + lineitem."
+    description: >
+      Gold model that aggregates revenue per customer. Revenue is computed as
+      SUM(l_extendedprice * (1 - l_discount)) across all line items linked to
+      that customer's orders.
+
     columns:
       - name: customer_id
-        tests: [not_null, unique]
+        description: "Customer key (TPCH CUSTOMER.C_CUSTKEY)."
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_name
+        description: "Customer name."
+
       - name: total_revenue
-        description: "Sum(l_extendedprice*(1-l_discount)) over all orders per customer"
+        description: >
+          Total revenue per customer calculated from lineitem amounts:
+          SUM(l_extendedprice * (1 - l_discount)).
+        tests:
+          - not_null

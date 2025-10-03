@@ -2,12 +2,33 @@ version: 2
 
 models:
   - name: stg_orders
-    description: "Silver layer: orders joined to customer with derived order_year."
+    description: >
+      Silver model that selects TPCH orders and joins to customers to add
+      `customer_name`, plus a derived `order_year` from `o_orderdate`.
+
     columns:
       - name: o_orderkey
-        tests: [not_null, unique]
+        description: "Order primary key (unique per order)."
+        tests:
+          - not_null
+          - unique
+
       - name: o_custkey
+        description: "Customer key referencing TPCH CUSTOMER.C_CUSTKEY."
         tests:
           - relationships:
-              to: source('tpch','customer')
-              field: c_custkey
+              arguments:
+                to: source('tpch', 'customer')
+                field: c_custkey
+
+      - name: customer_name
+        description: "Customer name pulled from TPCH CUSTOMER."
+
+      - name: o_orderdate
+        description: "Date the order was placed (from TPCH ORDERS.O_ORDERDATE)."
+
+      - name: order_year
+        description: "Calendar year derived from `o_orderdate`."
+
+      - name: o_totalprice
+        description: "Total price for the order (from TPCH ORDERS.O_TOTALPRICE)."
